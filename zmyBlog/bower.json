@@ -1,0 +1,20 @@
+{
+  "name": "zmyblog",
+  "description": "我的博客",
+  "main": "",
+  "authors": [
+    "niciL <773892580@qq.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/niciL/zmyBlog",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7"
+  }
+}
