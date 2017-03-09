@@ -10,6 +10,8 @@ var settings=require('./settings');
 var session=require('express-session');
 //保存session
 var MongoStore=require('connect-mongo')(session);
+//引入flash模块
+var flash=require('connect-flash');
 
 
 //设置app应用的路由架构，引入各个功能模块对应的导航模块
@@ -44,6 +46,7 @@ app.use(session({
   })
 }));
 
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -54,6 +57,19 @@ app.use(bodyParser.urlencoded({ extended: false }));//解析普通数据，解�
 app.use(cookieParser());
 //设置静态路由
 app.use(express.static(path.join(__dirname, 'public')));
+
+//给req对象添加flash功能
+app.use(flash())
+
+//添加中间件，用来处理flash消息的,要放在session后面，否则报错
+app.use(function(req,res,next){
+  //将session中保存的flash信息复制到res对象locals属性中，这样才能在模板上显示这些信息
+  res.locals.user=req.session.user;
+  res.locals.error=req.flash('error').toString();
+  res.locals.success=req.flash('success').toString();
+  //调用next()放行请求
+  next();
+})
 
 //路由映射，路由的设定应该遵循Restful设计原则
 app.use('/', index);
@@ -78,5 +94,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 module.exports = app;

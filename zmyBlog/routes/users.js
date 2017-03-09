@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var middleware=require('../middleware/index');
 
 /* GET users listing. */
 //访问登录页面
@@ -15,18 +16,19 @@ router.post('/login',function(req,res,next){
   Model("User").findOne(user,function(err,user){
     if(user){
       //用户登录成功,将用户的登录信息保存到session中
+      req.flash('success','登录成功')
       req.session.user=user;
       return res.redirect("/");
 
     }
-    //req.flash('err',err);
+    req.flash('error',"登录失败，用户名或密码错误");
     return res.redirect("/users/login")
   })
 
 })
 
 //打开注册页面
-router.get('/reg',function(req,res,next){
+router.get('/reg',middleware.checkNotLogin,function(req,res,next){
   res.render('users/reg',{title:'注册'})
 });
 
@@ -35,7 +37,7 @@ router.post('/reg',function(req,res,next){
   //获取用户提供的表单数据
   var user=req.body;
   if(user.password!=user.repassword){
-    //req.flash("error","两次密码不一致");
+    req.flash("error","两次密码不一致");
     //重定向到注册页面
     return res.redirect('/users/reg')
   }
@@ -48,11 +50,12 @@ router.post('/reg',function(req,res,next){
   //将user对象保存到数据库中
   new Model('User')(user).save(function(err,user){
     if(err){
-      //req.flash('err',err);
+      req.flash('err',"注册失败");
       res.redirect("/users/reg");
     }
 
     //在session中保存用户的登录信息
+      req.flash("success","注册成功");
       req.session.user=user;
       res.redirect("/")
   })
@@ -60,7 +63,9 @@ router.post('/reg',function(req,res,next){
 
 //注销用户登录
 router.get('/logout',function(req,res,next){
-  res.render('')
+  req.session.user=null;
+  req.flash("success","用户登录已注销");
+  res.redirect("/");
 });
 
 function md5(val){

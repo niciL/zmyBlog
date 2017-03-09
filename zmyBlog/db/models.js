@@ -15,7 +15,7 @@ module.exports={
         avatar:String,
     },
     //设置文章的数据模型
-    Atricle:{
+    Article:{
         //用户 ObjectId类型，指向User表
         user:{type:ObjectId,ref:'User'},
         title:{type:String,required:true},
