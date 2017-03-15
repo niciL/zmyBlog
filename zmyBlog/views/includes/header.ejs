@@ -30,7 +30,14 @@
                     </a>
                 </li>
             <%}%>
+
         </ul>
+        <form class="navbar-form navbar-right" method="post" action="/articles/list/1/2" role="search">
+            <div class="form-group">
+                <input type="text" class="form-control" name="keyword" placeholder="Search" value="<%=keyword%>"/>
+            </div>
+            <input type="submit" class="btn navbar-btn" name="searchBtn" value="search"/>
+        </form>
     </div>
 </nav>
 
